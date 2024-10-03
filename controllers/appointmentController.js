@@ -1,16 +1,35 @@
-const appointments = []; 
-const doctors = ["Dr. John Doe", "Dr. Jane Smith", "Dr. Emily Clark"]; 
+const appointments = [];
+let doctorAppointments = {
+  "Dr. John Doe": [
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "1:00 PM - 2:00 PM",
+  ],
+  "Dr. Jane Smith": ["9:00 AM - 10:00 AM", "2:00 PM - 3:00 PM"],
+  "Dr. Emily Clark": [
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "1:00 PM - 2:00 PM",
+  ],
+};
+const doctors = ["Dr. John Doe", "Dr. Jane Smith", "Dr. Emily Clark"];
 
 exports.bookAppointment = (req, res) => {
   const { firstName, lastName, email, timeSlot, doctorName } = req.body;
 
-  if (!doctors.includes(doctorName)) {
-    return res.status(400).json({ message: "Invalid doctor name" });
+  if (!doctorAppointments[doctorName]) {
+    return res.status(404).json({ message: "Doctor not found" });
+  }
+
+  const availableSlots = doctorAppointments[doctorName];
+  if (!availableSlots.includes(timeSlot)) {
+    return res.status(400).json({ message: "Time slot is not available" });
   }
 
   const existingAppointment = appointments.find(
     (a) => a.timeSlot === timeSlot && a.doctorName === doctorName
   );
+
   if (existingAppointment) {
     return res.status(400).json({ message: "Time slot already booked" });
   }

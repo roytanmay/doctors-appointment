@@ -9,7 +9,6 @@ const {
 let req, res;
 
 let mockAppointments = [];
-const mockDoctors = ["Dr. John Doe", "Dr. Jane Smith"];
 
 beforeEach(() => {
   req = {};
