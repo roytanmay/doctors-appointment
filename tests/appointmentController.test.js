@@ -60,14 +60,6 @@ test("should return appointment details for a valid patient email", () => {
 });
 
 test("should modify the appointment time slot successfully", () => {
-  mockAppointments.push({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@example.com",
-    timeSlot: "10:00 AM - 11:00 AM",
-    doctorName: "Dr. John Doe",
-  });
-
   req.body = {
     email: "john@example.com",
     originalTimeSlot: "10:00 AM - 11:00 AM",
@@ -86,6 +78,21 @@ test("should modify the appointment time slot successfully", () => {
       timeSlot: "11:00 AM - 12:00 PM",
       doctorName: "Dr. John Doe",
     },
+  });
+});
+
+test("should return error if the time slot is not available for the doctor", () => {
+  req.body = {
+    email: "john@example.com",
+    originalTimeSlot: "11:00 AM - 12:00 PM",
+    newTimeSlot: "7:00 AM - 8:00 AM",
+  };
+
+  modifyAppointment(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(400);
+  expect(res.json).toHaveBeenCalledWith({
+    message: "Time slot is not available",
   });
 });
 

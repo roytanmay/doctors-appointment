@@ -96,6 +96,11 @@ exports.modifyAppointment = (req, res) => {
     return res.status(404).json({ message: "No appointment found to modify" });
   }
 
+  const availableSlots = doctorAppointments[appointment.doctorName];
+  if (!availableSlots.includes(newTimeSlot)) {
+    return res.status(400).json({ message: "Time slot is not available" });
+  }
+
   const existingAppointment = appointments.find(
     (a) => a.timeSlot === newTimeSlot && a.doctorName === appointment.doctorName
   );
